@@ -1,0 +1,67 @@
+@font-face {
+    font-family: 'Cairo';
+    src: url("../fonts/Cairo/Cairo-VariableFont.ttf");
+  }
+
+@font-face {
+  font-family: '29ltbukrabold';
+  src: url("../editorFonts/29ltbukrabold.otf");
+}
+
+@font-face {
+  font-family: '29ltbukrabolditalic';
+  src: url("../editorFonts/29ltbukrabolditalic.otf");
+}
+
+@font-face {
+  font-family: '29ltbukralight';
+  src: url("../editorFonts/29ltbukralight.otf");
+}
+@font-face {
+  font-family: '29ltbukraregular';
+  src: url("../editorFonts/29ltbukraregular.otf");
+}
+@font-face {
+  font-family: 'Al-Jazeera-Arabic-Regular';
+  src: url("../editorFonts/Al-Jazeera-Arabic-Regular.ttf");
+}
+@font-face {
+  font-family: 'Amiri-Bold';
+  src: url("../editorFonts/Amiri-Bold.ttf");
+}
+@font-face {
+  font-family: 'Amiri-BoldSlanted';
+  src: url("../editorFonts/Amiri-BoldSlanted.ttf");
+}
+@font-face {
+  font-family: 'Amiri-Regular';
+  src: url("../editorFonts/Amiri-Regular.ttf");
+}
+@font-face {
+  font-family: 'Amiri-Slanted';
+  src: url("../editorFonts/Amiri-Slanted.ttf");
+}
+@font-face {
+  font-family: 'AmiriQuran';
+  src: url("../editorFonts/AmiriQuran.ttf");
+}
+@font-face {
+  font-family: 'AmiriQuranColored';
+  src: url("../editorFonts/AmiriQuranColored.ttf");
+}
+@font-face {
+  font-family: 'Cairo-Regular';
+  src: url("../editorFonts/Cairo-Regular.ttf");
+}
+@font-face {
+  font-family: 'Droid';
+  src: url("../editorFonts/Droid.Arabic.Kufi.ttf");
+}
+@font-face {
+  font-family: 'Jozoor-Font';
+  src: url("../editorFonts/Jozoor-Font.otf");
+}
+@font-face {
+  font-family: 'Hacen-Algeria-Bd';
+  src: url("../editorFonts/Hacen-Algeria-Bd.ttf");
+}

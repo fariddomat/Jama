@@ -1,0 +1,365 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Font */
+.ibm-plex-sans-arabic-thin {
+    font-family: "Cairo", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.ibm-plex-sans-arabic-extralight {
+    font-family: "Cairo", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.ibm-plex-sans-arabic-light {
+    font-family: "Cairo", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.ibm-plex-sans-arabic-regular {
+    font-family: "Cairo", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.ibm-plex-sans-arabic-medium {
+    font-family: "Cairo", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.ibm-plex-sans-arabic-semibold {
+    font-family: "Cairo", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.ibm-plex-sans-arabic-bold {
+    font-family: "Cairo", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Color Scheme */
+.bg-black,
+.primary-bg {
+    background-color: #282355;
+}
+
+.text-gray-900,
+.hover\:text-black:hover,
+.text-black,
+.primary-color {
+    color: #282355 !important;
+}
+
+.hover\:bg-blue-500:hover,
+.bg-blue-500,
+.secondary-bg {
+    background-color: #25b2d9;
+}
+
+.text-blue-500,
+.secondory-color {
+    color: #25b2d9;
+}
+.from-blue-500 {
+    --tw-gradient-from: #25b2d9 var(--tw-gradient-from-position);
+}
+.to-blue-500 {
+    --tw-gradient-to: #25b2d9 var(--tw-gradient-from-position);
+}
+
+.border-blue-500 {
+    --tw-border-opacity: 1;
+    border-color: rgb(37 178 217 / var(--tw-border-opacity, 1));
+}
+
+.white-bg {
+    background: #d6d9d9;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+}
+
+.container {
+    margin: 0 auto;
+}
+
+/* Header Styles */
+.header {
+    transition: all 0.3s ease-in-out;
+    background: transparent;
+    /* backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); */
+    color: #ffffff;
+    height: 6.5rem;}
+
+.header.scrolled {
+    background: white;
+    height: 5rem;
+    color: #282355;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.header-logo{
+
+    margin-top: -20px;
+}
+.header.scrolled .header-logo {
+    transform: scale(0.7);
+
+    margin-top: 0;
+}
+
+
+.header.scrolled  .nav-link, .header.scrolled .nav-items a, .header.scrolled i, .header.scrolled span {
+    color: #282355;
+}
+
+
+/* Active Link */
+.nav-link.active {
+    border-bottom: 2px solid #ffffff;
+    font-weight: bold;
+}
+
+/* Page Load Animation */
+.header {
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Loader Animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* RTL Adjustments */
+html[dir="rtl"] .nav-items {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .mobile-menu {
+    right: 0;
+    left: auto;
+    transform: translateX(100%);
+}
+
+html[dir="rtl"] .mobile-menu.open {
+    transform: translateX(0);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Footer Styles */
+.footer {
+    position: relative;
+    background: #25b2d9;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-top: -100px;
+}
+
+
+
+.footer a:hover {
+    color: #cccccc;
+}
+
+/* Social Icons */
+.social-icon {
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: #ffffff;
+    color: #282355;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+    }
+
+    .header.scrolled {
+        padding: 0.5rem;
+        height: 4rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* Loader */
+
+.loader {
+    border: 8px solid rgb(37 178 217);
+    border-top: 8px solid #282355;
+    border-radius: 100%;
+    animation: spin 1s linear infinite;
+}
+
+/* Navigation */
+header nav {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Guarantee Item */
+.guarantee-item::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background-color: #282355;
+    transform: rotate(45deg);
+    border-bottom-left-radius: 0.5rem;
+}
+
+.icon-notched::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    background-color: #282355;
+    transform: rotate(45deg);
+    border-bottom-left-radius: 4px;
+}
+
+/* Container Override */
+.container {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 640px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1536px) {
+    .container {
+        max-width: 1320px;
+    }
+}
+
+/* Floating Contact Button */
+.floating-contact-button {
+    position: fixed;
+    top: 33.33vh;
+    left: 5px;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-contact-button:hover::before {
+    width: 80px;
+    left: -25px;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #282355;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 24px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), scale 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contact-text {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #282355;
+    color: white;
+    padding: 0;
+    margin-right: 0;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1), margin-right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-contact-button:hover .contact-icon {
+    transform: rotate(360deg) scale(1.1);
+}
+
+.floating-contact-button:hover .contact-text {
+    max-width: 150px;
+    padding: 15px 20px;
+    margin-right: 10px;
+}
+
+.floating-contact-button:hover {
+    cursor: pointer;
+}
