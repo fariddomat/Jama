@@ -10,7 +10,6 @@
     <!-- Favicon -->
     {{-- <link rel="icon" type="image/x-icon" href=""> --}}
 
-
     <title>Logistic System | Jama</title>
 
     <!-- Fonts -->
@@ -45,7 +44,6 @@
             html[dir="rtl"] .-translate-x-64 {
                 --tw-translate-x: +16rem;
             }
-
         }
 
         @media (min-width: 768px) {
@@ -67,8 +65,7 @@
 </head>
 
 <body class="bg-gray-100">
-
-    <div class="flex h-screen  overflow-x-hidden" x-data="{ open: false }">
+    <div class="flex h-screen overflow-x-hidden" x-data="{ open: false }">
         <!-- Sidebar Overlay (Mobile) -->
         <div class="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden" x-show="open" @click="open = false"></div>
 
@@ -90,6 +87,34 @@
                     </x-responsive-nav-link>
                 @endif
 
+                <!-- Customers (Superadministrator or users with view-customers permission) -->
+                @if (auth()->user()->hasRole('superadministrator'))
+                    <x-responsive-nav-link href="{{ route('dashboard.customers.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.customers.')">
+                        @lang('site.customers') <i class="fas fa-user-friends"></i>
+                    </x-responsive-nav-link>
+                @endif
+
+                <!-- Statuses (Superadministrator or users with view-statuses permission) -->
+                @if (auth()->user()->hasRole('superadministrator'))
+                    <x-responsive-nav-link href="{{ route('dashboard.statuses.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.statuses.')">
+                        @lang('site.statuses') <i class="fas fa-list"></i>
+                    </x-responsive-nav-link>
+                @endif
+
+                <!-- Items (Superadministrator or users with view-items permission) -->
+                @if (auth()->user()->hasRole('superadministrator'))
+                    <x-responsive-nav-link href="{{ route('dashboard.items.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.items.')">
+                        @lang('site.items') <i class="fas fa-box"></i>
+                    </x-responsive-nav-link>
+                @endif
+
+                {{-- Orders --}}
+                 @if (auth()->user()->hasRole('superadministrator'))
+                    <x-responsive-nav-link href="{{ route('dashboard.orders.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.orders.')">
+                        @lang('site.orders') <i class="fas fa-cart-plus"></i>
+                    </x-responsive-nav-link>
+                @endif
+
                 <!-- Profile -->
                 <x-responsive-nav-link href="{{ route('profile') }}" :active="request()->routeIs('profile')">
                     @lang('site.profile') <i class="fas fa-user-cog"></i>
@@ -98,9 +123,8 @@
         </aside>
 
         <div class="container main-b flex-1 flex flex-col -ml-64 md:ml-64">
-
             <!-- Navbar -->
-            <header class="bg-blue-800 text-white  shadow p-4 flex justify-between items-center">
+            <header class="bg-blue-800 text-white shadow p-4 flex justify-between items-center">
                 <!-- Mobile Menu Button -->
                 <button @click="open = !open" class="md:hidden text-gray-700 text-2xl">
                     <i class="fas fa-bars"></i>
@@ -108,15 +132,6 @@
 
                 <!-- User Actions -->
                 <div class="flex space-x-3 items-center text-lg">
-                    {{-- <span class="cursor-pointer hover:text-gray-500pr-2">
-                        <i class="fas fa-bell"></i>
-                    </span> --}}
-
-                    {{-- <span class="cursor-pointer hover:text-gray-500 pr-2">
-                        <i class="fas fa-user"></i> User
-                    </span> --}}
-
-                    <!-- Logout Button -->
                     <span class="cursor-pointer hover:text-red-500 pr-2 w-full">
                         <a class="w-full text-start" href="{{ route('dashboard.logout') }}" wire:navigate>
                             <i class="fas fa-sign-out-alt"></i> @lang('site.logout')
@@ -153,15 +168,14 @@
     <script type="text/javascript">
         $(function() {
             $("textarea").each(function(index) {
-                // Skip if the textarea is invalid or hidden (e.g., display: none)
+                // Skip if the textarea is invalid or hidden
                 if (!this || $(this).is(':hidden') || $(this).parents().is(':hidden')) {
-                    return true; // Continue to next iteration
+                    return true;
                 }
 
                 // Assign a unique ID if none exists
                 if (!this.id) {
-                    this.id = 'textarea-' + index + '-' + Math.random().toString(36).substr(2,
-                        9); // Unique ID
+                    this.id = 'textarea-' + index + '-' + Math.random().toString(36).substr(2, 9);
                 }
 
                 // Initialize CKEditor only if not already initialized
@@ -174,8 +188,6 @@
             });
         });
     </script>
-
-
 </body>
 
 </html>

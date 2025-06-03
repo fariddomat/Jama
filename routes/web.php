@@ -53,11 +53,8 @@ Route::prefix('dashboard')
         Route::post('/statuses/{id}/restore', [\App\Http\Controllers\Dashboard\StatusController::class, 'restore'])->name('statuses.restore');
         Route::resource('/items', \App\Http\Controllers\Dashboard\ItemController::class);
         Route::post('/items/{id}/restore', [\App\Http\Controllers\Dashboard\ItemController::class, 'restore'])->name('items.restore');
+        Route::resource('/orders', \App\Http\Controllers\Dashboard\OrderController::class);
+        Route::post('/orders/{id}/restore', [\App\Http\Controllers\Dashboard\OrderController::class, 'restore'])->name('orders.restore');
     });
 
 require __DIR__ . '/auth.php';
-Route::prefix('dashboard')->name('dashboard.')->group(function () {
-    Route::resource('/orders', \App\Http\Controllers\Dashboard\OrderController::class);
-    Route::post('/orders/{id}/restore', [\App\Http\Controllers\Dashboard\OrderController::class, 'restore'])->name('orders.restore');
-});
-
