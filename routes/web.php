@@ -58,3 +58,4 @@ Route::prefix('dashboard')
     });
 
 require __DIR__ . '/auth.php';
+

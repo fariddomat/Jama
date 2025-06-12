@@ -18,7 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('contact_number')->nullable(); // For merchants
-            $table->string('address')->nullable(); // For merchants
+            $table->text('address')->nullable(); // For merchants
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
             $table->boolean('active')->default(1);
