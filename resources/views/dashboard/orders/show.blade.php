@@ -5,7 +5,7 @@
         </h1>
 
         <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="mb-4">
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.customer_id')</label>
                 <p class="text-gray-900">
                     @isset($order->customer)
@@ -14,7 +14,8 @@
                         {{ $order->customer_id ?? '—' }}
                     @endisset
                 </p>
-            </div>            <div class="mb-4">
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.merchant_id')</label>
                 <p class="text-gray-900">
                     @isset($order->merchant)
@@ -23,7 +24,8 @@
                         {{ $order->merchant_id ?? '—' }}
                     @endisset
                 </p>
-            </div>            <div class="mb-4">
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.delivery_agent_id')</label>
                 <p class="text-gray-900">
                     @isset($order->deliveryAgent)
@@ -32,16 +34,41 @@
                         {{ $order->delivery_agent_id ?? '—' }}
                     @endisset
                 </p>
-            </div>            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">@lang('site.from_address')</label>
-                <p class="text-gray-900">{{ $order->from_address ?? '—' }}</p>
-            </div>            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">@lang('site.to_address')</label>
-                <p class="text-gray-900">{{ $order->to_address ?? '—' }}</p>
-            </div>            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">@lang('site.delivery_time')</label>
-                <p class="text-gray-900">{{ $order->delivery_time ? $order->delivery_time->format('Y-m-d" . (datetime === 'datetime' ? ' H:i' : '') . "') : '—' }}</p>
             </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">@lang('site.otp')</label>
+                <p class="text-gray-900">{{ $order->otp ?? '—' }}</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">@lang('site.from_address')</label>
+                <p class="text-gray-900">{!! $order->from_address ?? '—' !!}</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">@lang('site.to_address')</label>
+                <p class="text-gray-900">{!! $order->to_address ?? '—' !!}</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">@lang('site.delivery_time')</label>
+                <p class="text-gray-900">{{ $order->delivery_time ? $order->delivery_time : '—' }}</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">@lang('site.notes')</label>
+                <p class="text-gray-900">{!! $order->notes ?? '—' !!}</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">@lang('site.items')</label>
+                
+            <x-autocrud::table
+                :columns="['id', 'otp', 'name', 'barcode', 'status_id']"
+                :data="$order->items"
+                routePrefix="dashboard.items"
+                :show="true"
+                :edit="true"
+                :delete="true"
+                :restore="true"
+            />
+            </div>
+        </div>
             <a href="{{ route('dashboard.orders.index') }}" class="mt-4 inline-block px-4 py-2 bg-gray-500 text-white rounded shadow hover:bg-gray-700">
                 @lang('site.back')
             </a>

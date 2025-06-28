@@ -44,6 +44,15 @@
             html[dir="rtl"] .-translate-x-64 {
                 --tw-translate-x: +16rem;
             }
+
+            html[dir="ltr"] .main-b {
+                margin-right: 0 !important;
+                margin-left: -16rem !important;
+            }
+
+            html[dir="ltr"] .-translate-x-64 {
+                --tw-translate-x: -16rem;
+            }
         }
 
         @media (min-width: 768px) {
@@ -88,7 +97,7 @@
                 @endif
 
                 <!-- Customers (Superadministrator or users with view-customers permission) -->
-                @if (auth()->user()->hasRole('superadministrator'))
+                @if (auth()->user()->hasRole('superadministrator') || auth()->user()->hasRole('merchant'))
                     <x-responsive-nav-link href="{{ route('dashboard.customers.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.customers.')">
                         @lang('site.customers') <i class="fas fa-user-friends"></i>
                     </x-responsive-nav-link>
@@ -101,19 +110,20 @@
                     </x-responsive-nav-link>
                 @endif
 
-                <!-- Items (Superadministrator or users with view-items permission) -->
-                @if (auth()->user()->hasRole('superadministrator'))
-                    <x-responsive-nav-link href="{{ route('dashboard.items.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.items.')">
-                        @lang('site.items') <i class="fas fa-box"></i>
+                @if (auth()->user()->hasRole('delivery_agent'))
+                    <x-responsive-nav-link href="{{ route('dashboard.delivery-agent-dashboard') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.orders.')">
+                        Delivery <i class="fas fa-cart-plus"></i>
                     </x-responsive-nav-link>
                 @endif
-
                 {{-- Orders --}}
-                 @if (auth()->user()->hasRole('superadministrator'))
-                    <x-responsive-nav-link href="{{ route('dashboard.orders.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.orders.')">
-                        @lang('site.orders') <i class="fas fa-cart-plus"></i>
-                    </x-responsive-nav-link>
-                @endif
+                <x-responsive-nav-link href="{{ route('dashboard.orders.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.orders.')">
+                    @lang('site.orders') <i class="fas fa-cart-plus"></i>
+                </x-responsive-nav-link>
+                <!-- Items (Superadministrator or users with view-items permission) -->
+                <x-responsive-nav-link href="{{ route('dashboard.items.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.items.')">
+                    @lang('site.items') <i class="fas fa-box"></i>
+                </x-responsive-nav-link>
+
 
                 <!-- Profile -->
                 <x-responsive-nav-link href="{{ route('profile') }}" :active="request()->routeIs('profile')">
@@ -122,7 +132,7 @@
             </nav>
         </aside>
 
-        <div class="container main-b flex-1 flex flex-col -ml-64 md:ml-64">
+        <div class="main-b flex-1 flex flex-col -ml-64 md:ml-64">
             <!-- Navbar -->
             <header class="bg-blue-800 text-white shadow p-4 flex justify-between items-center">
                 <!-- Mobile Menu Button -->
@@ -155,6 +165,8 @@
     <!-- Include ajaxForm library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     @extends('layouts._noty')
     <script>
         document.addEventListener('livewire:initialized', () => {
@@ -182,12 +194,16 @@
                 if (!CKEDITOR.instances[this.id]) {
                     CKEDITOR.replace(this.id, {
                         removeButtons: "About",
-                        contentsLangDirection: $(this).attr('dir') || 'rtl'
+                        contentsLangDirection: $(this).attr('dir') || 'ltr'
                     });
                 }
             });
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+
 </body>
 
 </html>

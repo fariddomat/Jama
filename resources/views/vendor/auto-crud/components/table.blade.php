@@ -2,7 +2,7 @@
     'columns' => [],
     'data' => [],
     'routePrefix' => '',
-    'parentId' => null, // New prop for parent resource ID (e.g., project ID)
+    'parentId' => null,
     'show' => false,
     'edit' => false,
     'delete' => false,
@@ -49,6 +49,14 @@
                                                 class="w-16 h-16 rounded">
                                         @elseif ($col === 'file' && $row->$col)
                                             <a href="{{ Storage::url($row->$col) }}" target="_blank">View PDF</a>
+                                        @elseif (Str::endsWith($col, '_id'))
+                                            @php
+                                                $relation = Str::before($col, '_id');
+                                                $relationName = $col === 'customer_id' ? 'customer' : ($col === 'merchant_id' ? 'merchant' : ($col === 'delivery_agent_id' ? 'deliveryAgent' : ($col === 'order_id' ? 'order' : $relation)));
+                                            @endphp
+                                            {{ $row->$relationName ? $row->$relationName->name : '—' }}
+                                        @elseif ($col === 'otp' && $row instanceof \App\Models\Item)
+                                            {{ $row->order ? $row->order->otp : '—' }}
                                         @else
                                             {{ $row->$col ?? '—' }}
                                         @endif
@@ -105,6 +113,14 @@
                                 <img src="{{ Storage::url($row->$col) }}" alt="Image" class="w-16 h-16 rounded">
                             @elseif ($col === 'file' && $row->$col)
                                 <a href="{{ Storage::url($row->$col) }}" target="_blank">View PDF</a>
+                            @elseif (Str::endsWith($col, '_id'))
+                                @php
+                                    $relation = Str::before($col, '_id');
+                                    $relationName = $col === 'customer_id' ? 'customer' : ($col === 'merchant_id' ? 'merchant' : ($col === 'delivery_agent_id' ? 'deliveryAgent' : ($col === 'order_id' ? 'order' : $relation)));
+                                @endphp
+                                {{ $row->$relationName ? $row->$relationName->name : '—' }}
+                            @elseif ($col === 'otp' && $row instanceof \App\Models\Item)
+                                {{ $row->order ? $row->order->otp : '—' }}
                             @else
                                 {{ $row->$col ?? '—' }}
                             @endif
@@ -154,7 +170,8 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="{{ count($columns) + 1 }}" class="px-4 py-2 text-center text-gray-500">
+                    <td colspan="{{ count($columns) + ($show || $edit || $delete || $restore ? 1 : 0) }}"
+                        class="px-4 py-2 text-center text-gray-500">
                         @lang('site.no_records_found')
                     </td>
                 </tr>

@@ -41,40 +41,37 @@ new class extends Component
 <section class="password-section">
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('تحديث كلمة المرور') }}
+            {{ __('Update Password') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('تأكد من أن حسابك يستخدم كلمة مرور طويلة وعشوائية للبقاء آمنًا.') }}
-        </p>
     </header>
 
     <form wire:submit="updatePassword" class="mt-6 space-y-6">
         <div>
-            <x-input-label for="update_password_current_password" :value="__('كلمة المرور الحالية')" />
+            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
             <x-text-input wire:model="current_password" id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
             <x-input-error :messages="$errors->get('current_password')" class="mt-2" />
         </div>
 
         <div>
-            <x-input-label for="update_password_password" :value="__('كلمة المرور الجديدة')" />
+            <x-input-label for="update_password_password" :value="__('new password')" />
             <x-text-input wire:model="password" id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('تأكيد كلمة المرور')" />
+            <x-input-label for="update_password_password_confirmation" :value="__('new password confirmation')" />
             <x-text-input wire:model="password_confirmation" id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button class="bg-blue-500 hover:bg-blue-600">
-                {{ __('حفظ') }}
+                {{ __('Save') }}
             </x-primary-button>
 
             <x-action-message class="ml-3" on="password-updated">
-                {{ __('تم الحفظ.') }}
+                {{ __('Saved.') }}
             </x-action-message>
         </div>
     </form>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Status extends Model
 {
-    
+
     use SoftDeletes;
 
     protected $fillable = ['name'];
@@ -20,4 +20,9 @@ class Status extends Model
     }
 
     protected $searchable = ['name'];
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
 }

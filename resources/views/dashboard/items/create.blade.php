@@ -11,7 +11,7 @@
                 <select name="order_id" class="w-full border border-gray-300 rounded p-2">
                     <option value="">@lang('site.select_order_id')</option>
                     @foreach ($orders as $option)
-                        <option value="{{ $option->id }}" {{ old('order_id') == $option->id ? 'selected' : '' }}>{{ $option->name }}</option>
+                        <option value="{{ $option->id }}" {{ old('order_id') == $option->id ? 'selected' : '' }}>{{ $option->otp }}</option>
                     @endforeach
                 </select>
                 @error('order_id')

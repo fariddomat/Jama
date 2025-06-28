@@ -66,52 +66,49 @@ new class extends Component
 <section class="profile-section">
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('معلومات الملف الشخصي') }}
+            {{ __('Update Profile') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('تحديث معلومات الملف الشخصي وعنوان البريد الإلكتروني لحسابك.') }}
-        </p>
     </header>
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
         <div>
-            <x-input-label for="name" :value="__('الاسم')" />
+            <x-input-label for="name" :value="__('Name')" />
             <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('البريد الإلكتروني')" />
+            <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" dir="ltr" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('عنوان بريدك الإلكتروني غير مُتحقق.') }}
+                        {{ __('Not Valid.') }}
 
-                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800">
+                        {{-- <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800">
                             {{ __('انقر هنا لإعادة إرسال بريد التحقق.') }}
-                        </button>
+                        </button> --}}
                     </p>
 
-                    @if (session('status') === 'verification-link-sent')
+                    {{-- @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
                             {{ __('تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني.') }}
                         </p>
-                    @endif
+                    @endif --}}
                 </div>
             @endif
         </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button class="bg-blue-500 hover:bg-blue-600">
-                {{ __('حفظ') }}
+                {{ __('Save') }}
             </x-primary-button>
 
             <x-action-message class="ml-3" on="profile-updated">
-                {{ __('تم الحفظ.') }}
+                {{ __('Saved.') }}
             </x-action-message>
         </div>
     </form>

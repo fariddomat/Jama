@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-    
+
     use SoftDeletes;
 
     protected $fillable = ['order_id', 'name', 'barcode', 'status_id'];
@@ -23,12 +23,17 @@ class Item extends Model
     }
 
     protected $searchable = ['name', 'barcode'];
-    public function Order()
+    public function order()
     {
         return $this->belongsTo(\App\Models\Order::class, 'order_id');
     }
-    public function Status()
+    public function status()
     {
         return $this->belongsTo(\App\Models\Status::class, 'status_id');
+    }
+
+    public function getCustomerNameAttribute()
+    {
+        return $this->order && $this->order->customer ? $this->order->customer->name : '—';
     }
 }

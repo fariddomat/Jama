@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('mobile')->unique();
+            $table->string('mr_number')->unique();
             $table->text('address');
             $table->softDeletes();
             $table->timestamps();

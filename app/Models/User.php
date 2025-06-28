@@ -46,6 +46,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public static function rules($id = null)
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required_without:contact_number|string|email|max:255|unique:users,email,' . ($id ?: 'NULL'),
+            'contact_number' => 'required_without:email|string|max:255|unique:users,contact_number,' . ($id ?: 'NULL'),
+            'password' => 'sometimes|string|min:8' . ($id ? '|confirmed' : ''),
+            'address' => 'nullable|string',
+            'active' => 'sometimes|boolean',
+        ];
+    }
     public function getNameAttribute($value)
     {
         return ucfirst($value);
@@ -89,5 +102,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'delivery_agent_id');
     }
+
+    public function deliveryAgent()
+{
+    return $this->hasOne(User::class, 'id');
+}
 
 }

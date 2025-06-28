@@ -16,7 +16,7 @@
                 <p class="text-gray-900">{{ $user->contact_number ?? '—' }}</p>
             </div>            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.address')</label>
-                <p class="text-gray-900">{{ $user->address ?? '—' }}</p>
+                <p class="text-gray-900">{!! $user->address ?? '—' !!}</p>
             </div>            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.active')</label>
                 <p class="text-gray-900">{{ $user->active ? 'Yes' : 'No' }}</p>

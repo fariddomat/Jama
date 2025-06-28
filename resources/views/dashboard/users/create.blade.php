@@ -26,7 +26,7 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">تأكيد كلمة المرور</label>
+                <label class="block text-sm font-medium text-gray-700">Password Confirmation</label>
                 <input type="password" name="password" value="{{ old('password') }}" class="w-full border border-gray-300 rounded p-2">
                 @error('password')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -56,7 +56,7 @@
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">@lang('site.role')</label>
             <select wire:model="role_id" class="w-full border border-gray-300 rounded p-2">
-              
+
                 @foreach ($roles as $role)
                     <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
                 @endforeach

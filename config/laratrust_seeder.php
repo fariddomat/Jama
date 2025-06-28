@@ -14,24 +14,24 @@ return [
     'roles_structure' => [
         'superadministrator' => [
             'users' => 'c,r,u,d',
-            'payments' => 'c,r,u,d',
-            'profile' => 'r,u',
-        ],
-        'admin' => [
-            'users' => 'c,r,u,d',
+            'orders' => 'c,r,u,d',
+            'items' => 'c,r,u,d',
             'profile' => 'r,u',
         ],
         'delivery_agent' => [
-            'profile' => 'r,u',
+            'orders' => 'r,u',
+            'items' => 'r,u',
         ],
         'merchant' => [
+            'orders' => 'c,r,u,d',
+            'items' => 'c,r,u,d',
         ],
     ],
-
     'permissions_map' => [
         'c' => 'create',
         'r' => 'read',
         'u' => 'update',
         'd' => 'delete',
     ],
+
 ];

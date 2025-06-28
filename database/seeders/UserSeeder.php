@@ -20,11 +20,5 @@ class UserSeeder extends Seeder
         ]);
         $user->addRole('superadministrator');
 
-        $blogger = User::create([
-            'name' => 'blogger',
-            'email' => 'blogger@project.com',
-            'password' => bcrypt('00@11@22$33'),
-        ]);
-        $blogger->addRole('blogger');
     }
 }

@@ -6,19 +6,28 @@
 
         <form action="{{ route('dashboard.customers.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md" enctype="multipart/form-data">
             @csrf
-                        <div class="mb-4">
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.name')</label>
                 <input type="text" name="name" value="{{ old('name') }}" class="w-full border border-gray-300 rounded p-2">
                 @error('name')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
-            </div>            <div class="mb-4">
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.mobile')</label>
                 <input type="text" name="mobile" value="{{ old('mobile') }}" class="w-full border border-gray-300 rounded p-2">
                 @error('mobile')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
-            </div>            <div class="mb-4">
+            </div>
+            <div class="mb-4">
+                <label class="block  text-sm font-medium text-gray-700">@lang('site.mr_number')</label>
+                <input type="text" name="mr_number" value="{{ old('mr_number') }}" class="w-full border border-gray-300 rounded p-2">
+                @error('mr_number')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">@lang('site.address')</label>
                 <textarea name="address" class="w-full border border-gray-300 rounded p-2">{{ old('address') }}</textarea>
                 @error('address')

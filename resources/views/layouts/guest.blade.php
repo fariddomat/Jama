@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="utf-8">
@@ -120,9 +120,9 @@
         <div class="guest-card">
             <div class="guest-logo">
                 <a href="/" wire:navigate style="text-align: -webkit-center;">
-                    <img src="{{ asset('logo/Al-Hussam 4.png') }}" class="w-32 h-40 fill-current text-gray-500"
+                    {{-- <img src="{{ asset('') }}" class="w-32 h-40 fill-current text-gray-500"
                         alt="">
-                </a>
+                </a> --}}
             </div>
             {{ $slot }}
         </div>

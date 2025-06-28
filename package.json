@@ -18,7 +18,9 @@
     "dependencies": {
         "@headlessui/react": "^2.2.0",
         "@heroicons/react": "^2.2.0",
+        "@zxing/browser": "^0.1.5",
         "alpinejs": "^3.14.8",
+        "quagga": "^0.12.1",
         "swiper": "^11.2.7"
     }
 }
