@@ -117,7 +117,7 @@
 </head>
 
 <body class="antialiased">
-    <div class="guest-container">
+    <div class="guest-container" style="background-image: url('{{asset('desktop.jpg')}}'); background-size: cover;">
         <div class="guest-card">
             <div class="guest-logo">
                 <a href="/" wire:navigate style="text-align: -webkit-center;">
