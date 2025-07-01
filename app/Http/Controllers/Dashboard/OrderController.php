@@ -119,13 +119,11 @@ class OrderController extends Controller
 
     public function import()
     {
-        $this->authorize('create', Order::class);
         return view('dashboard.orders.import');
     }
 
     public function importStore(Request $request)
     {
-        $this->authorize('create', Order::class);
 
         $request->validate([
             'file' => 'required|mimes:xlsx,xls',

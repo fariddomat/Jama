@@ -1,5 +1,5 @@
 
-    <div class="container mx-auto p-6">
+    <div class="container mx-auto p-6" style="max-width: 98%">
         <h1 class="text-2xl font-bold mb-4">{{ __('Dashboard') }}</h1>
 
         <!-- Statistics Cards -->

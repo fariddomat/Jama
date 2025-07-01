@@ -113,6 +113,7 @@
             }
         }
     </style>
+    @livewireStyles
 </head>
 
 <body class="antialiased">
@@ -121,8 +122,8 @@
             <div class="guest-logo">
                 <a href="/" wire:navigate style="text-align: -webkit-center;">
                     {{-- <img src="{{ asset('') }}" class="w-32 h-40 fill-current text-gray-500"
-                        alt="">
-                </a> --}}
+                        alt="">--}}
+                </a>
             </div>
             {{ $slot }}
         </div>
