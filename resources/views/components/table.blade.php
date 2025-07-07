@@ -34,12 +34,12 @@
                     <td class="px-4 py-2 border border-gray-300 md:hidden" @click="expanded = !expanded">
                         <div class="flex justify-between items-center cursor-pointer">
                             <span>{{ $row->{$columns[0]} ?? '—' }}</span>
-                            <button class="text-blue-500">
+                            <button class="text-blue-500" type="button">
                                 <i class="fas fa-chevron-down" x-show="!expanded"></i>
                                 <i class="fas fa-chevron-up" x-show="expanded"></i>
                             </button>
                         </div>
-                        <div class="flex-row p-4 bg-gray-100 border border-gray-300 mt-3" x-show="expanded">
+                        <div class="flex-row p-4 bg-gray-100 border border-gray-300 mt-3" x-show="expanded" x-cloak>
                             @foreach ($columns as $col)
                                 <div class="flex justify-between py-1">
                                     <strong>{{ ucfirst(str_replace('_', ' ', $col)) }}:</strong>
@@ -66,12 +66,12 @@
                                                     <option value="{{ $id }}" {{ $row->status_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                                                 @endforeach
                                             </select>
-                                            <div x-show="confirmStatusChange" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                            <div x-show="confirmStatusChange" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                                 <div class="bg-white p-6 rounded-lg shadow-lg">
-                                                    <p class="mb-4">{{ __('site.confirm_status_change') }}</p>
+                                                    <p class="mb-4">{{ __('confirm_status_change') }}</p>
                                                     <div class="flex space-x-4">
-                                                        <button @click="confirmStatusChange = false; $wire.updateItemStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">{{ __('site.confirm') }}</button>
-                                                        <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('site.cancel') }}</button>
+                                                        <button @click="confirmStatusChange = false; $wire.updateItemStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">{{ __('confirm') }}</button>
+                                                        <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('cancel') }}</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -149,12 +149,12 @@
                                         <option value="{{ $id }}" {{ $row->status_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                                     @endforeach
                                 </select>
-                                <div x-show="confirmStatusChange" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div x-show="confirmStatusChange" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                     <div class="bg-white p-6 rounded-lg shadow-lg">
-                                        <p class="mb-4">{{ __('site.confirm_status_change') }}</p>
+                                        <p class="mb-4">{{ __('confirm_status_change') }}</p>
                                         <div class="flex space-x-4">
-                                            <button @click="confirmStatusChange = false; $wire.updateItemStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">{{ __('site.confirm') }}</button>
-                                            <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('site.cancel') }}</button>
+                                            <button @click="confirmStatusChange = false; $wire.updateItemStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">{{ __('confirm') }}</button>
+                                            <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('cancel') }}</button>
                                         </div>
                                     </div>
                                 </div>

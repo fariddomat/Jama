@@ -10,7 +10,7 @@
     <!-- Favicon -->
     {{-- <link rel="icon" type="image/x-icon" href=""> --}}
 
-    <title>Logistic System | Jama</title>
+    <title>Logistic System | Gama</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -111,7 +111,7 @@
                 @endif
 
                 @if (auth()->user()->hasRole('delivery_agent'))
-                    <x-responsive-nav-link href="{{ route('dashboard.delivery-agent-dashboard') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.orders.')">
+                    <x-responsive-nav-link href="{{ route('dashboard.delivery-agent-dashboard') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.delivery-agent-dashboard')">
                         Delivery <i class="fas fa-cart-plus"></i>
                     </x-responsive-nav-link>
                 @endif
