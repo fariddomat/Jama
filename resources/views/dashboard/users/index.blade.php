@@ -4,7 +4,7 @@
         <a href="{{ route('dashboard.users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded shadow" wire:navigate>➕ @lang('site.add') User</a>
 
         <div class="overflow-x-auto mt-4">
-            <x-autocrud::table
+            <x-table
                 :columns="['id', 'name', 'email', 'active']"
                 :data="$users"
                 routePrefix="dashboard.users"

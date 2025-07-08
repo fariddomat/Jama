@@ -12,26 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
-        if ($user->hasRole('superadministrator')) {
-            $orders = Order::with(['customer', 'merchant', 'deliveryAgent'])->get();
-        } elseif ($user->hasRole('delivery_agent')) {
-            $orders = Order::with(['customer', 'merchant', 'deliveryAgent'])
-                ->where('delivery_agent_id', $user->id)
-                ->get();
-        } elseif ($user->hasRole('merchant')) {
-            $orders = Order::with(['customer', 'merchant', 'deliveryAgent'])
-                ->where('merchant_id', $user->id)
-                ->get();
-        } else {
-            $orders = collect();
-        }
-
-        return view('dashboard.orders.index', compact('orders'));
-    }
-
     public function create()
     {
         $customers = \App\Models\Customer::all();
@@ -61,7 +41,6 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = \App\Models\Order::with(['customer', 'merchant', 'deliveryAgent', 'items'])->findOrFail($id);
-
         $this->authorize('view', $order);
 
         return view('dashboard.orders.show', compact('order'));
@@ -119,12 +98,11 @@ class OrderController extends Controller
 
     public function import()
     {
-        return view('dashboard.orders.import');
+        return view('dashboard.orders.import', ['skippedRows' => session('skippedRows', [])]);
     }
 
     public function importStore(Request $request)
     {
-
         $request->validate([
             'file' => 'required|mimes:xlsx,xls',
         ]);
@@ -135,13 +113,16 @@ class OrderController extends Controller
             $skippedRows = $import->getSkippedRows();
 
             if (!empty($skippedRows)) {
-                return redirect()->route('dashboard.orders.import')->with('warning', 'Some rows were skipped: ' . json_encode($skippedRows));
+                return redirect()->route('dashboard.orders.import')
+                    ->with('warning', __('Some rows were skipped during import.'))
+                    ->with('skippedRows', $skippedRows);
             }
 
-            return redirect()->route('dashboard.orders.index')->with('success', 'Orders imported successfully.');
+            return redirect()->route('dashboard.orders.index')->with('success', __('Orders imported successfully.'));
         } catch (\Exception $e) {
-            Log::error('Import failed', ['error' => $e->getMessage()]);
-            return redirect()->route('dashboard.orders.import')->with('error', 'Error importing orders: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Import failed', ['error' => $e->getMessage()]);
+            return redirect()->route('dashboard.orders.import')
+                ->with('error', __('Error importing orders: :message', ['message' => $e->getMessage()]));
         }
     }
 }

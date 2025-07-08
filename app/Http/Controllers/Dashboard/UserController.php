@@ -7,17 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Role;
+use Maatwebsite\Excel\Excel;
+use App\Exports\UsersExport;
 
 class UserController extends Controller
 {
     public function __construct()
     {
         $this->middleware(['auth']);
+        $this->middleware(['role:superadministrator'])->only(['index', 'create', 'store', 'edit', 'update', 'destroy', 'restore', 'export']);
     }
 
     public function index()
     {
-        $users = \App\Models\User::whereRoleNot(['superadministrator'])->get();
+        $users = User::whereRoleNot(['superadministrator'])->get();
         return view('dashboard.users.index', compact('users'));
     }
 
@@ -33,16 +36,10 @@ class UserController extends Controller
 
         $validated['password'] = bcrypt($request->password);
 
-        $user = \App\Models\User::create($validated);
+        $user = User::create($validated);
         $user->addRole($request->role_id ?: 2);
 
         return redirect()->route('dashboard.users.index')->with('success', 'User created successfully.');
-    }
-
-    public function show($id)
-    {
-        $user = \App\Models\User::findOrFail($id);
-        return view('dashboard.users.show', compact('user'));
     }
 
     public function edit($id)
@@ -54,7 +51,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
         $validated = $request->validate(User::rules($id));
 
         $user->syncRoles([$request->role_id ?: 2]);
@@ -65,15 +62,28 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
         $user->delete();
         return redirect()->route('dashboard.users.index')->with('success', 'User deleted successfully.');
     }
 
     public function restore($id)
     {
-        $user = \App\Models\User::withTrashed()->findOrFail($id);
+        $user = User::withTrashed()->findOrFail($id);
         $user->restore();
         return redirect()->route('dashboard.users.index')->with('success', 'User restored successfully.');
+    }
+
+    public function export(Request $request)
+    {
+        $role = $request->query('role');
+        $search = $request->query('search');
+        $filename = 'users_' . ($role ? $role : 'all') . '_' . now()->format('Y-m-d') . '.csv';
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new UsersExport($role, $search),
+            $filename,
+            Excel::CSV
+        );
     }
 }

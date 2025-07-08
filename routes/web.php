@@ -6,8 +6,11 @@ use App\Http\Controllers\Dashboard\ImageGalleryController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\SiteController;
 use App\Livewire\Dashboard as LivewireDashboard;
+use App\Livewire\OrdersIndex;
 use App\Livewire\OrderStatusUpdater;
 use App\Livewire\UserForm;
+use App\Livewire\UserShow;
+use App\Livewire\UsersIndex;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -53,7 +56,19 @@ Route::prefix('dashboard')
     ->name('dashboard.')
     ->middleware(['auth', 'role:superadministrator|admin|delivery_agent|merchant'])
     ->group(function () {
-        Route::resource('users', UserController::class);
+
+
+    Route::get('/users', UsersIndex::class)->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{id}', UserShow::class)->name('users.show');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::get('/users/export', [UserController::class, 'export'])->name('users.export');
+
+    Route::get('/orders', OrdersIndex::class)->name('orders.index');
         Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/order-status', OrderStatusUpdater::class)->name('order-status');
         Route::get('/delivery-agent-dashboard', \App\Livewire\DeliveryAgentDashboard::class)
@@ -71,7 +86,7 @@ Route::prefix('dashboard')
         Route::post('/items/{id}/restore', [\App\Http\Controllers\Dashboard\ItemController::class, 'restore'])->name('items.restore');
         Route::get('/orders/import', [App\Http\Controllers\Dashboard\OrderController::class, 'import'])->name('orders.import');
         Route::post('/orders/import', [App\Http\Controllers\Dashboard\OrderController::class, 'importStore'])->name('orders.import.store');
-        Route::resource('/orders', \App\Http\Controllers\Dashboard\OrderController::class);
+        Route::resource('/orders', \App\Http\Controllers\Dashboard\OrderController::class)->except('index');
         Route::post('/orders/{id}/restore', [\App\Http\Controllers\Dashboard\OrderController::class, 'restore'])->name('orders.restore');
     });
 

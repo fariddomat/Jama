@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto p-6">
         <h1 class="text-2xl font-bold mb-4">
-            @lang('site.edit') @lang('site.dashboard.statuses')
+            @lang('site.edit') status
         </h1>
 
         <form action="{{ route('dashboard.statuses.update', $status->id) }}" method="POST" class="bg-white p-6 rounded-lg shadow-md" enctype="multipart/form-data">
