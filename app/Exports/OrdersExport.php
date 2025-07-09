@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\Order;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Support\Facades\Auth;
 
 class OrdersExport implements FromCollection, WithHeadings
 {
@@ -27,17 +28,21 @@ class OrdersExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $query = Order::with(['customer', 'merchant', 'deliveryAgent', 'items.status'])
+        $user = Auth::user();
+        $query = Order::with(['customer', 'merchant', 'deliveryAgent', 'status'])
+            ->when($user->hasRole('delivery_agent'), fn($q) => $q->where('delivery_agent_id', $user->id))
+            ->when($user->hasRole('merchant'), fn($q) => $q->where('merchant_id', $user->id))
             ->when($this->search, fn($q) => $q->where('otp', 'like', "%{$this->search}%")
                 ->orWhereHas('customer', fn($q) => $q->where('name', 'like', "%{$this->search}%")))
-            ->when($this->deliveryAgent, fn($q) => $q->whereHas('deliveryAgent', fn($q) => $q->where('id', $this->deliveryAgent)))
-            ->when($this->merchant, fn($q) => $q->whereHas('merchant', fn($q) => $q->where('id', $this->merchant)))
-            ->when($this->status, fn($q) => $q->whereHas('items', fn($q) => $q->where('status_id', $this->status)))
+            ->when($this->deliveryAgent && ($user->hasRole('superadministrator') || $user->hasRole('merchant')),
+                fn($q) => $q->whereHas('deliveryAgent', fn($q) => $q->where('id', $this->deliveryAgent)))
+            ->when($this->merchant && $user->hasRole('superadministrator'),
+                fn($q) => $q->whereHas('merchant', fn($q) => $q->where('id', $this->merchant)))
+            ->when($this->status, fn($q) => $q->where('status_id', $this->status))
             ->when($this->dateFrom, fn($q) => $q->whereDate('delivery_time', '>=', $this->dateFrom))
             ->when($this->dateTo, fn($q) => $q->whereDate('delivery_time', '<=', $this->dateTo));
 
         return $query->get()->map(function ($order) {
-            $status = $order->items->first() ? $order->items->first()->status->name : '—';
             return [
                 'ID' => $order->id,
                 'Customer' => $order->customer ? $order->customer->name : '—',
@@ -47,7 +52,7 @@ class OrdersExport implements FromCollection, WithHeadings
                 'To Address' => $order->to_address,
                 'Delivery Time' => $order->delivery_time,
                 'OTP' => $order->otp,
-                'Status' => $status,
+                'Status' => $order->status ? $order->status->name : '—',
             ];
         });
     }

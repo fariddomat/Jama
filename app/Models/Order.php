@@ -10,18 +10,19 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['customer_id', 'merchant_id', 'delivery_agent_id', 'from_address', 'to_address', 'delivery_time', 'otp', 'notes'];
+    protected $fillable = ['customer_id', 'merchant_id', 'delivery_agent_id', 'status_id', 'from_address', 'to_address', 'delivery_time', 'otp', 'notes'];
 
-    public static function rules()
+    public static function rules($id = null)
     {
         return [
             'customer_id' => 'required|exists:customers,id',
             'merchant_id' => 'required|exists:users,id',
             'delivery_agent_id' => 'nullable|exists:users,id',
+            'status_id' => 'required|exists:statuses,id',
             'from_address' => 'nullable|string',
             'to_address' => 'nullable|string',
             'delivery_time' => 'nullable|date',
-            'otp' => 'required|string|max:255|unique:orders,otp',
+            'otp' => 'required|string|max:255|unique:orders,otp,' . ($id ? $id : 'NULL'),
             'notes' => 'nullable|string',
         ];
     }
@@ -30,10 +31,10 @@ class Order extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\App\Models\Customer::class, 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-       public function getCustomerNameAttribute()
+    public function getCustomerNameAttribute()
     {
         return $this && $this->customer ? $this->customer->name : '—';
     }
@@ -48,18 +49,21 @@ class Order extends Model
         return $this->belongsTo(User::class, 'delivery_agent_id');
     }
 
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function getStatussAttribute()
+    {
+        return $this->status->name;
+
+    }
+
+
     public function items()
     {
         return $this->hasMany(Item::class, 'order_id');
-    }
-
-    public function getStatusAttribute()
-    {
-        $statuses = $this->items->pluck('status.name')->unique();
-        if ($statuses->count() === 1) {
-            return $statuses->first();
-        }
-        return 'pending';
     }
 
     public static function boot()

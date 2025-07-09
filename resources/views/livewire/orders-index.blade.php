@@ -46,7 +46,7 @@
 
     <div class="overflow-x-auto mt-4">
         <x-table
-            :columns="['id', 'customer_id', 'merchant_id', 'delivery_agent_id', 'status']"
+            :columns="['id', 'customer_id', 'merchant_id', 'delivery_agent_id', 'delivery_time', 'otp', 'statuss']"
             :data="$orders"
             routePrefix="dashboard.orders"
             :show="true"

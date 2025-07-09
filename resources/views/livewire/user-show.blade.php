@@ -43,7 +43,7 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <!-- Total Orders -->
         <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
             <h2 class="text-lg font-semibold text-gray-700">Total Orders</h2>
@@ -59,13 +59,6 @@
                 <a href="{{ route('dashboard.customers.index') }}" class="text-sm text-blue-500 hover:underline" wire:navigate>View Customers</a>
             </div>
         @endif
-
-        <!-- Total Items -->
-        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-700">Total Items</h2>
-            <p class="text-3xl font-bold text-blue-600">{{ $totalStats['items']['total'] }}</p>
-            <a href="{{ route('dashboard.items.index') }}" class="text-sm text-blue-500 hover:underline" wire:navigate>View Items</a>
-        </div>
     </div>
 
     <!-- Time-Based Statistics -->
@@ -75,11 +68,11 @@
             <h2 class="text-lg font-semibold text-gray-700">Last Week</h2>
             <ul class="mt-4 space-y-2">
                 <li>Orders: <a href="{{ route('dashboard.orders.index') }}" class="text-blue-500 hover:underline" wire:navigate>{{ $lastWeekStats['orders']['total'] }}</a></li>
-                <li>Pending: {{ $lastWeekStats['orders']['pending'] }}</li>
-                <li>Out for Delivery: {{ $lastWeekStats['orders']['out_for_delivery'] }}</li>
-                <li>Delivered: {{ $lastWeekStats['orders']['delivered'] }}</li>
-                <li>Not Delivered: {{ $lastWeekStats['orders']['not_delivered'] }}</li>
-                <li>Returned: {{ $lastWeekStats['orders']['returned'] }}</li>
+                <li>Pending: {{ $lastWeekStats['orders']['by_status']['Pending'] }}</li>
+                <li>Out for Delivery: {{ $lastWeekStats['orders']['by_status']['Out for Delivery'] }}</li>
+                <li>Delivered: {{ $lastWeekStats['orders']['by_status']['Delivered'] }}</li>
+                <li>Not Delivered: {{ $lastWeekStats['orders']['by_status']['Not Delivered'] }}</li>
+                <li>Returned: {{ $lastWeekStats['orders']['by_status']['Returned'] }}</li>
                 @if (!$user->hasRole('delivery_agent'))
                     <li>Customers: {{ $lastWeekStats['customers'] }}</li>
                 @endif
@@ -91,11 +84,11 @@
             <h2 class="text-lg font-semibold text-gray-700">Last Month</h2>
             <ul class="mt-4 space-y-2">
                 <li>Orders: <a href="{{ route('dashboard.orders.index') }}" class="text-blue-500 hover:underline" wire:navigate>{{ $lastMonthStats['orders']['total'] }}</a></li>
-                <li>Pending: {{ $lastMonthStats['orders']['pending'] }}</li>
-                <li>Out for Delivery: {{ $lastMonthStats['orders']['out_for_delivery'] }}</li>
-                <li>Delivered: {{ $lastMonthStats['orders']['delivered'] }}</li>
-                <li>Not Delivered: {{ $lastMonthStats['orders']['not_delivered'] }}</li>
-                <li>Returned: {{ $lastMonthStats['orders']['returned'] }}</li>
+                <li>Pending: {{ $lastMonthStats['orders']['by_status']['Pending'] }}</li>
+                <li>Out for Delivery: {{ $lastMonthStats['orders']['by_status']['Out for Delivery'] }}</li>
+                <li>Delivered: {{ $lastMonthStats['orders']['by_status']['Delivered'] }}</li>
+                <li>Not Delivered: {{ $lastMonthStats['orders']['by_status']['Not Delivered'] }}</li>
+                <li>Returned: {{ $lastMonthStats['orders']['by_status']['Returned'] }}</li>
                 @if (!$user->hasRole('delivery_agent'))
                     <li>Customers: {{ $lastMonthStats['customers'] }}</li>
                 @endif
@@ -103,13 +96,13 @@
         </div>
     </div>
 
-    <!-- Items by Status Chart -->
+    <!-- Orders by Status Chart -->
     <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
-        <h2 class="text-lg font-semibold text-gray-700">Items by Status</h2>
-        <canvas id="itemsChart" class="mt-4"></canvas>
+        <h2 class="text-lg font-semibold text-gray-700">Orders by Status</h2>
+        <canvas id="ordersChart" class="mt-4"></canvas>
         <script>
             document.addEventListener('livewire:navigated', function () {
-                const ctx = document.getElementById('itemsChart').getContext('2d');
+                const ctx = document.getElementById('ordersChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -118,22 +111,22 @@
                             {
                                 label: 'Last Week',
                                 data: [
-                                    {{ $lastWeekStats['items']['by_status']['Pending'] ?? 0 }},
-                                    {{ $lastWeekStats['items']['by_status']['Out for Delivery'] ?? 0 }},
-                                    {{ $lastWeekStats['items']['by_status']['Delivered'] ?? 0 }},
-                                    {{ $lastWeekStats['items']['by_status']['Not Delivered'] ?? 0 }},
-                                    {{ $lastWeekStats['items']['by_status']['Returned'] ?? 0 }},
+                                    {{ $lastWeekStats['orders']['by_status']['Pending'] ?? 0 }},
+                                    {{ $lastWeekStats['orders']['by_status']['Out for Delivery'] ?? 0 }},
+                                    {{ $lastWeekStats['orders']['by_status']['Delivered'] ?? 0 }},
+                                    {{ $lastWeekStats['orders']['by_status']['Not Delivered'] ?? 0 }},
+                                    {{ $lastWeekStats['orders']['by_status']['Returned'] ?? 0 }},
                                 ],
                                 backgroundColor: 'rgba(59, 130, 246, 0.5)',
                             },
                             {
                                 label: 'Last Month',
                                 data: [
-                                    {{ $lastMonthStats['items']['by_status']['Pending'] ?? 0 }},
-                                    {{ $lastMonthStats['items']['by_status']['Out for Delivery'] ?? 0 }},
-                                    {{ $lastMonthStats['items']['by_status']['Delivered'] ?? 0 }},
-                                    {{ $lastMonthStats['items']['by_status']['Not Delivered'] ?? 0 }},
-                                    {{ $lastMonthStats['items']['by_status']['Returned'] ?? 0 }},
+                                    {{ $lastMonthStats['orders']['by_status']['Pending'] ?? 0 }},
+                                    {{ $lastMonthStats['orders']['by_status']['Out for Delivery'] ?? 0 }},
+                                    {{ $lastMonthStats['orders']['by_status']['Delivered'] ?? 0 }},
+                                    {{ $lastMonthStats['orders']['by_status']['Not Delivered'] ?? 0 }},
+                                    {{ $lastMonthStats['orders']['by_status']['Returned'] ?? 0 }},
                                 ],
                                 backgroundColor: 'rgba(16, 185, 129, 0.5)',
                             },
@@ -155,7 +148,7 @@
         <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Merchant Orders</h2>
             <x-table
-                :columns="['id', 'customer_id', 'merchant_id', 'delivery_agent_id', 'status']"
+                :columns="['id', 'customer_id', 'merchant_id', 'delivery_agent_id',  'delivery_time', 'otp', 'statuss']"
                 :data="$user->merchantOrders"
                 routePrefix="dashboard.orders"
                 :show="true"
@@ -170,7 +163,7 @@
         <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Assigned Orders</h2>
             <x-table
-                :columns="['id', 'customer_id', 'merchant_id', 'delivery_agent_id', 'status']"
+                :columns="['id', 'customer_id', 'merchant_id', 'delivery_agent_id','delivery_time', 'otp', 'statuss']"
                 :data="$user->assignedOrders"
                 routePrefix="dashboard.orders"
                 :show="true"

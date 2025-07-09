@@ -24,7 +24,7 @@ class OrdersIndex extends Component
     public function render()
     {
         $user = Auth::user();
-        $orders = Order::with(['customer', 'merchant', 'deliveryAgent'])
+        $orders = Order::with(['customer', 'merchant', 'deliveryAgent', 'status'])
             ->when($user->hasRole('delivery_agent'), fn($q) => $q->where('delivery_agent_id', $user->id))
             ->when($user->hasRole('merchant'), fn($q) => $q->where('merchant_id', $user->id))
             ->when($this->search, fn($q) => $q->where('otp', 'like', "%{$this->search}%")
@@ -33,7 +33,7 @@ class OrdersIndex extends Component
                 fn($q) => $q->whereHas('deliveryAgent', fn($q) => $q->where('id', $this->deliveryAgent)))
             ->when($this->merchant && $user->hasRole('superadministrator'),
                 fn($q) => $q->whereHas('merchant', fn($q) => $q->where('id', $this->merchant)))
-            ->when($this->status, fn($q) => $q->whereHas('items', fn($q) => $q->where('status_id', $this->status)))
+            ->when($this->status, fn($q) => $q->where('status_id', $this->status))
             ->when($this->dateFrom, fn($q) => $q->whereDate('delivery_time', '>=', $this->dateFrom))
             ->when($this->dateTo, fn($q) => $q->whereDate('delivery_time', '<=', $this->dateTo))
             ->get();

@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Item;
+use App\Models\Order;
 use App\Models\Status;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +15,7 @@ class DeliveryAgentDashboard extends Component
 {
     use WithFileUploads;
 
-    public $orders = []; // Actually items
+    public $orders = [];
     public $statusFilter = '';
     public $search = '';
     public $barcode;
@@ -44,9 +44,9 @@ class DeliveryAgentDashboard extends Component
             abort(403, 'Unauthorized');
         }
 
-        $query = Item::query()
-            ->whereHas('order', fn($q) => $q->where('delivery_agent_id', $user->id))
-            ->with(['order', 'order.customer', 'status']);
+        $query = Order::query()
+            ->where('delivery_agent_id', $user->id)
+            ->with(['customer', 'status']);
 
         if ($this->statusFilter) {
             $query->where('status_id', $this->statusFilter);
@@ -54,18 +54,18 @@ class DeliveryAgentDashboard extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->whereHas('order', fn($q2) => $q2->where('otp', 'like', '%' . $this->search . '%'))
-                  ->orWhereHas('order.customer', fn($q2) => $q2->where('name', 'like', '%' . $this->search . '%'));
+                $q->where('otp', 'like', '%' . $this->search . '%')
+                  ->orWhereHas('customer', fn($q2) => $q2->where('name', 'like', '%' . $this->search . '%'));
             });
         }
 
         $this->orders = $query->get();
 
-        Log::debug('Delivery Agent Items', [
+        Log::debug('Delivery Agent Orders', [
             'user_id' => $user->id,
             'status_filter' => $this->statusFilter,
             'search' => $this->search,
-            'items_count' => $this->orders->count(),
+            'orders_count' => $this->orders->count(),
         ]);
     }
 
@@ -75,16 +75,16 @@ class DeliveryAgentDashboard extends Component
             'barcode' => 'nullable|string',
         ]);
 
-        $item = Item::where('barcode', $this->barcode)
-            ->whereHas('order', fn($query) => $query->where('delivery_agent_id', Auth::id()))
-            ->with('order')
+        $order = Order::whereHas('items', fn($query) => $query->where('barcode', $this->barcode))
+            ->where('delivery_agent_id', Auth::id())
+            ->with('items')
             ->first();
 
-        if ($item) {
-            $this->search = $item->order->otp;
+        if ($order) {
+            $this->search = $order->otp;
             $this->loadOrders();
         } else {
-            $this->addError('barcode', __('site.order_not_found'));
+            $this->addError('barcode', 'Order not found');
         }
 
         $this->barcode = null;
@@ -107,40 +107,41 @@ class DeliveryAgentDashboard extends Component
                     throw new \Exception('No barcode detected');
                 }
 
-                $item = Item::where('barcode', $barcode)
-                    ->whereHas('order', fn($query) => $query->where('delivery_agent_id', Auth::id()))
-                    ->with('order')
+                $order = Order::whereHas('items', fn($query) => $query->where('barcode', $barcode))
+                    ->where('delivery_agent_id', Auth::id())
+                    ->with('items')
                     ->first();
 
-                if ($item) {
-                    $this->search = $item->order->otp;
+                if ($order) {
+                    $this->search = $order->otp;
                     $this->loadOrders();
                 } else {
-                    $this->addError('image', __('site.order_not_found'));
+                    $this->addError('image', 'Order not found');
                 }
             } catch (\Exception $e) {
                 Log::error('Barcode decode error: ' . $e->getMessage());
-                $this->addError('image', __('site.barcode_decode_error'));
+                $this->addError('image', 'Barcode decode error');
             }
         }
     }
 
-    public function updateItemStatus($itemId, $statusId)
+    public function updateOrderStatus($orderId, $statusId)
     {
         Validator::make(
             ['status_id' => $statusId],
             ['status_id' => 'required|exists:statuses,id'],
             [],
-            ['status_id' => 'status_id']
+            ['status_id' => 'status']
         )->validate();
 
-        $item = Item::where('id', $itemId)
-            ->whereHas('order', fn($q) => $q->where('delivery_agent_id', Auth::id()))
+        $order = Order::where('id', $orderId)
+            ->where('delivery_agent_id', Auth::id())
             ->firstOrFail();
 
-        $item->update(['status_id' => $statusId]);
+        $order->update(['status_id' => $statusId]);
+        $order->items()->update(['status_id' => $statusId]);
 
-        session()->flash('message', __('site.status_updated'));
+        session()->flash('message', 'Status updated successfully');
         $this->loadOrders();
     }
 

@@ -120,9 +120,9 @@
                     @lang('site.orders') <i class="fas fa-cart-plus"></i>
                 </x-responsive-nav-link>
                 <!-- Items (Superadministrator or users with view-items permission) -->
-                <x-responsive-nav-link href="{{ route('dashboard.items.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.items.')">
+                {{-- <x-responsive-nav-link href="{{ route('dashboard.items.index') }}" :active="Str::startsWith(request()->route()->getName(), 'dashboard.items.')">
                     @lang('site.items') <i class="fas fa-box"></i>
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
 
 
                 <!-- Profile -->

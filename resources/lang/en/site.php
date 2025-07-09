@@ -319,5 +319,6 @@ return [
     'barcode_decode_error' => 'Failed to decode barcode from image',
     'status_updated' => 'Status updated successfully',
     'confirm_status_change' => 'Confirm status change',
+    'statuss' => 'Status',
 
 ];

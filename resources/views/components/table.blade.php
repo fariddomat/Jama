@@ -14,14 +14,14 @@
         <!-- Table Head -->
         <thead class="bg-blue-800 text-white">
             <tr>
-                <th class="px-4 py-2 border border-gray-300 text-left md:hidden">@lang('site.details')</th>
+                <th class="px-4 py-2 border border-gray-300 text-left md:hidden">Details</th>
                 @foreach ($columns as $col)
                     <th class="px-4 py-2 border border-gray-300 text-left hidden md:table-cell">
-                        @lang('site.' . $col)
+                        {{ ucfirst(str_replace('_', ' ', $col)) }}
                     </th>
                 @endforeach
                 @if ($show || $edit || $delete || $restore || $slot->isNotEmpty())
-                    <th class="px-4 py-2 border border-gray-300 text-center hidden md:table-cell">@lang('site.action')</th>
+                    <th class="px-4 py-2 border border-gray-300 text-center hidden md:table-cell">Action</th>
                 @endif
             </tr>
         </thead>
@@ -45,8 +45,7 @@
                                     <strong>{{ ucfirst(str_replace('_', ' ', $col)) }}:</strong>
                                     <span>
                                         @if (($col === 'img' || $col === 'image') && $row->$col)
-                                            <img src="{{ Storage::url($row->$col) }}" alt="Image"
-                                                class="w-16 h-16 rounded">
+                                            <img src="{{ Storage::url($row->$col) }}" alt="Image" class="w-16 h-16 rounded">
                                         @elseif ($col === 'file' && $row->$col)
                                             <a href="{{ Storage::url($row->$col) }}" target="_blank">View PDF</a>
                                         @elseif (Str::endsWith($col, '_id'))
@@ -55,23 +54,21 @@
                                                 $relationName = $col === 'customer_id' ? 'customer' : ($col === 'merchant_id' ? 'merchant' : ($col === 'delivery_agent_id' ? 'deliveryAgent' : ($col === 'order_id' ? 'order' : $relation)));
                                             @endphp
                                             {{ $row->$relationName ? $row->$relationName->name : '—' }}
-                                        @elseif ($col === 'otp' && $row instanceof \App\Models\Item)
-                                            {{ $row->order ? $row->order->otp : '—' }}
-                                        @elseif ($col === 'customer_name' && $row instanceof \App\Models\Item)
-                                            {{ $row->customer_name }}
-                                        @elseif ($col === 'status' && $row instanceof \App\Models\Item)
+                                        @elseif ($col === 'customer_name' && $row instanceof \App\Models\Order)
+                                            {{ $row->customer ? $row->customer->name : '—' }}
+                                        @elseif ($col === 'status' && $row instanceof \App\Models\Order)
                                             <select wire:model.live="data.{{ $loop->index }}.status_id" @change="confirmStatusChange = true; newStatusId = $event.target.value" class="border-gray-300 rounded-md shadow-sm">
-                                                <option value="">{{ __('site.select_status') }}</option>
+                                                <option value="">Select Status</option>
                                                 @foreach (\App\Models\Status::whereNull('deleted_at')->pluck('name', 'id') as $id => $name)
                                                     <option value="{{ $id }}" {{ $row->status_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                                                 @endforeach
                                             </select>
                                             <div x-show="confirmStatusChange" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                                 <div class="bg-white p-6 rounded-lg shadow-lg">
-                                                    <p class="mb-4">{{ __('confirm_status_change') }}</p>
+                                                    <p class="mb-4">Confirm status change?</p>
                                                     <div class="flex space-x-4">
-                                                        <button @click="confirmStatusChange = false; $wire.updateItemStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">{{ __('confirm') }}</button>
-                                                        <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('cancel') }}</button>
+                                                        <button @click="confirmStatusChange = false; $wire.updateOrderStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Confirm</button>
+                                                        <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Cancel</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -88,33 +85,33 @@
                                     @if ($show)
                                         <a href="{{ route($routePrefix . '.show', $parentId ? [$parentId, $row->id] : $row->id) }}"
                                             class="text-blue-500 hover:text-blue-700" wire:navigate>
-                                            <i class="fas fa-eye"></i> @lang('site.show')
+                                            <i class="fas fa-eye"></i> Show
                                         </a>
                                     @endif
                                     @if ($edit && !$row->trashed())
                                         <a href="{{ route($routePrefix . '.edit', $parentId ? [$parentId, $row->id] : $row->id) }}"
                                             class="text-yellow-500 hover:text-yellow-700" wire:navigate>
-                                            <i class="fas fa-edit"></i> @lang('site.edit')
+                                            <i class="fas fa-edit"></i> Edit
                                         </a>
                                     @endif
                                     @if ($delete && !$row->trashed())
                                         <form
                                             action="{{ route($routePrefix . '.destroy', $parentId ? [$parentId, $row->id] : $row->id) }}"
-                                            method="POST" onsubmit="return confirm('@lang('site.are_you_sure')');">
+                                            method="POST" onsubmit="return confirm('Are you sure?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-500 hover:text-red-700">
-                                                <i class="fas fa-trash"></i> @lang('site.delete')
+                                                <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </form>
                                     @endif
                                     @if ($restore && $row->trashed())
                                         <form
                                             action="{{ route($routePrefix . '.restore', $parentId ? [$parentId, $row->id] : $row->id) }}"
-                                            method="POST" onsubmit="return confirm('@lang('site.are_you_sure_restore')');">
+                                            method="POST" onsubmit="return confirm('Are you sure you want to restore?');">
                                             @csrf
                                             <button type="submit" class="text-green-500 hover:text-green-700">
-                                                <i class="fas fa-undo"></i> @lang('site.restore')
+                                                <i class="fas fa-undo"></i> Restore
                                             </button>
                                         </form>
                                     @endif
@@ -138,23 +135,21 @@
                                     $relationName = $col === 'customer_id' ? 'customer' : ($col === 'merchant_id' ? 'merchant' : ($col === 'delivery_agent_id' ? 'deliveryAgent' : ($col === 'order_id' ? 'order' : $relation)));
                                 @endphp
                                 {{ $row->$relationName ? $row->$relationName->name : '—' }}
-                            @elseif ($col === 'otp' && $row instanceof \App\Models\Item)
-                                {{ $row->order ? $row->order->otp : '—' }}
-                            @elseif ($col === 'customer_name' && $row instanceof \App\Models\Item)
-                                {{ $row->customer_name }}
-                            @elseif ($col === 'status' && $row instanceof \App\Models\Item)
+                            @elseif ($col === 'customer_name' && $row instanceof \App\Models\Order)
+                                {{ $row->customer ? $row->customer->name : '—' }}
+                            @elseif ($col === 'status' && $row instanceof \App\Models\Order)
                                 <select wire:model.live="data.{{ $loop->index }}.status_id" @change="confirmStatusChange = true; newStatusId = $event.target.value" class="border-gray-300 rounded-md shadow-sm">
-                                    <option value="">{{ __('site.select_status') }}</option>
+                                    <option value="">Select Status</option>
                                     @foreach (\App\Models\Status::whereNull('deleted_at')->pluck('name', 'id') as $id => $name)
                                         <option value="{{ $id }}" {{ $row->status_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                                     @endforeach
                                 </select>
                                 <div x-show="confirmStatusChange" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                     <div class="bg-white p-6 rounded-lg shadow-lg">
-                                        <p class="mb-4">{{ __('confirm_status_change') }}</p>
+                                        <p class="mb-4">Confirm status change?</p>
                                         <div class="flex space-x-4">
-                                            <button @click="confirmStatusChange = false; $wire.updateItemStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">{{ __('confirm') }}</button>
-                                            <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('cancel') }}</button>
+                                            <button @click="confirmStatusChange = false; $wire.updateOrderStatus({{ $row->id }}, newStatusId)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Confirm</button>
+                                            <button @click="confirmStatusChange = false; $wire.set('data.{{ $loop->index }}.status_id', {{ $row->status_id ?? 'null' }})" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +178,7 @@
                                 @if ($delete && !$row->trashed())
                                     <form
                                         action="{{ route($routePrefix . '.destroy', $parentId ? [$parentId, $row->id] : $row->id) }}"
-                                        method="POST" onsubmit="return confirm('@lang('site.are_you_sure')');">
+                                        method="POST" onsubmit="return confirm('Are you sure?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-500 hover:text-red-700">
@@ -194,7 +189,7 @@
                                 @if ($restore && $row->trashed())
                                     <form
                                         action="{{ route($routePrefix . '.restore', $parentId ? [$parentId, $row->id] : $row->id) }}"
-                                        method="POST" onsubmit="return confirm('@lang('site.are_you_sure_restore')');">
+                                        method="POST" onsubmit="return confirm('Are you sure you want to restore?');">
                                         @csrf
                                         <button type="submit" class="text-green-500 hover:text-green-700">
                                             <i class="fas fa-undo"></i>
@@ -210,7 +205,7 @@
                 <tr>
                     <td colspan="{{ count($columns) + ($show || $edit || $delete || $restore || $slot->isNotEmpty() ? 1 : 0) }}"
                         class="px-4 py-2 text-center text-gray-500">
-                        @lang('site.no_records_found')
+                        No records found
                     </td>
                 </tr>
             @endforelse

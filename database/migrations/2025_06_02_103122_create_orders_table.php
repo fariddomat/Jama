@@ -18,6 +18,7 @@ return new class extends Migration
             $table->datetime('delivery_time')->nullable();
             $table->string('otp')->unique();
             $table->text('notes')->nullable();
+            $table->foreignId('status_id')->constrained('statuses')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

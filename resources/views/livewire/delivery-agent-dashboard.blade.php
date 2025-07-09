@@ -1,6 +1,6 @@
 <div>
     <div class="container mx-auto p-6" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
-        <h1 class="text-2xl font-bold mb-4">{{ __('site.delivery_agent_dashboard') }}</h1>
+        <h1 class="text-2xl font-bold mb-4">Delivery Agent Dashboard</h1>
 
         <!-- Success/Warning/Error Messages -->
         @if (session('message'))
@@ -21,9 +21,9 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Status Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ __('site.filter_by_status') }}</label>
+                    <label class="block text-sm font-medium text-gray-700">Filter by Status</label>
                     <select wire:model.live="statusFilter" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        <option value="">{{ __('site.all_statuses') }}</option>
+                        <option value="">All Statuses</option>
                         @foreach ($statuses as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
@@ -32,15 +32,15 @@
 
                 <!-- Search by OTP or Name -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ __('site.search') }}</label>
-                    <input type="text" wire:model.live.debounce.500ms="search" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="{{ __('site.search_by_otp_or_name') }}">
+                    <label class="block text-sm font-medium text-gray-700">Search</label>
+                    <input type="text" wire:model.live.debounce.500ms="search" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Search by OTP or Customer Name">
                 </div>
 
                 <!-- Barcode Scanner Toggle -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ __('site.scan_barcode') }}</label>
+                    <label class="block text-sm font-medium text-gray-700">Scan Barcode</label>
                     <button @click="scanning = !scanning; if (scanning) initScanner(); else Quagga.stop();" class="mt-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                        <span x-text="scanning ? '{{ __('site.stop_scanner') }}' : '{{ __('site.start_scanner') }}'"></span>
+                        <span x-text="scanning ? 'Stop Scanner' : 'Start Scanner'"></span>
                     </button>
                 </div>
             </div>
@@ -52,27 +52,27 @@
                     <div class="scan-line"></div>
                 </div>
                 <div id="qr-reader-results" class="mt-2 p-2 bg-gray-100 rounded-md text-gray-700"></div>
-                <input type="text" wire:model.live="barcode" id="barcode-input" class="mt-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="{{ __('site.barcode') }}">
+                <input type="text" wire:model.live="barcode" id="barcode-input" class="mt-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Barcode">
                 @error('barcode') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                <button @click="restartScanner()" class="mt-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">{{ __('site.restart_scanner') }}</button>
+                <button @click="restartScanner()" class="mt-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Restart Scanner</button>
             </div>
 
             <!-- Image Upload -->
             <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700">{{ __('site.upload_barcode_image') }}</label>
+                <label class="block text-sm font-medium text-gray-700">Upload Barcode Image</label>
                 <input type="file" wire:model="image" accept="image/*" class="mt-2 block w-full border-gray-300 rounded-md shadow-sm">
-                <button wire:click="findOrderByImage" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">{{ __('site.find_order') }}</button>
+                <button wire:click="findOrderByImage" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Find Order</button>
                 @error('image') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
         </div>
 
-        <!-- Items Table -->
+        <!-- Orders Table -->
         <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4">{{ __('site.your_items') }}</h2>
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">Your Orders</h2>
             <x-table
-                :columns="['name', 'customer_name', 'otp', 'status']"
+                :columns="['otp', 'customer_name', 'to_address', 'status']"
                 :data="$orders"
-                routePrefix="dashboard.items"
+                routePrefix="dashboard.orders"
                 :show="true"
                 :edit="false"
                 :delete="false"
